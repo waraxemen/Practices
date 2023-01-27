@@ -3,4 +3,5 @@ money=int(input("Введите сумму, которую планируете 
 dict_values=list(per_cent.values())
 pre_deposit=list(map(lambda num: num*money/100,dict_values))
 deposit=[int(x) for x in pre_deposit] 
+print("Накопленные средства за год вклада: ", deposit)
 print ("Максимальная сумма, которую вы можете заработать —", max(deposit))
