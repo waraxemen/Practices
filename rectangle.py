@@ -18,3 +18,4 @@ class Circle:
         self.radius=radius
     def areaCircle(self):
         return 3.1416* self.radius**2
+

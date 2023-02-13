@@ -28,3 +28,21 @@ litelist=[l_1,l_2,l_3]
 
 for _ in litelist: #Полный список покупателей
     print(_.__str__())
+
+Ivanov = Customers('Иван', 'Иванов', 'Пермь', 150)
+if __name__ == "__main__":
+    print(Ivanov)
+
+Ivanov = ['Иван', 'Иванов', 'Пермь', 150]
+Kupystin = ['Пётр', 'Капустин', 'Пермь', 0]
+List2 = [Ivanov, Kupystin]
+
+def whichClass(*i):
+ for j in i:
+  for name in j:
+   if name[3]==0:
+    name=Lite(name[0],name[1],name[2],name[3])
+   else: name=Customers(name[0],name[1],name[2],name[3])
+   print(name)
+
+whichClass(List2)
