@@ -5,45 +5,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 import pytest
 
-# рекомендуется использовать фикстуры. Их стоит вставлять в файл conftest.py,
-# который находится в корневой директории тестового проекта.
-# @pytest.fixture
-# def firefox_options(firefox_options):
-#     firefox_options.binary = '/path/to/firefox-bin'  #  путь к exe-драйверу Firefox.
-#     firefox_options.add_argument('-foreground')  # возможность запуска в фоновом или реальном режиме.
-#     # В нашем случае выбран последний. Для фонового укажите ‘-background’.
-#     firefox_options.set_preference('browser.anchor_color', '#FF0000')  # выбор цвета подложки браузера.
-#     return firefox_options
-
-
-# def chrome_options(chrome_options):
-#     chrome_options.binary_location = '/path/to/chrome'
-#     chrome_options.add_extension('/path/to/extension.crx')  # включение дополнений браузера.
-#     chrome_options.add_argument('--kiosk')  # в режиме киоска (защищённый полноэкранный режим без меню,
-#     # применяемый в публичных местах) Через метод chrome_options.add_argument() можно задавать другие параметры
-#     запуска браузера из списка (https://peter.sh/experiments/chromium-command-line-switches/).
-#     chrome_options.add_argument('--disable-gpu')  # отключение графического интерфейса.
-#     chrome_options.add_argument('--disable-extensions')  # отключение дополнений браузера.
-#     chrome_options.set_headless(True)  # без пользовательского интерфейса
-#     return chrome_options
-
-#  content of file conftest.py
-# В нашем примере мы будем до теста задавать определённые размеры окна браузера, а после теста, в случае его падения,
-# менять цвет фона для контрастности и делать скриншот. Цвет фона мы будем менять при помощи команды javascript,
-# а исполняет эту команду метод browser.execute_script(). Запомните этот метод, он очень полезен для выполнения
-# произвольного javascript-кода.
-#
-# Кроме того, у нас будут выведены в системную консоль логи из консоли веб-браузера (той, которая появляется при нажатии
-# F12). Для этого используется метод browser.get_log('browser').
-#
-# Для того, чтобы в нашей фикстуре мы узнали, как именно завершился тест (удачно или нет), мы используем способ,
-# который в официальных рекомендациях к pytest называется "Making test result information available in fixtures".
-# Для этого мы добавляем вначале функцию pytest_runtest_makereport, которая добавляет к объекту request информацию о
-# результатах теста. Сейчас мы не будем подробно останавливаться на содержании этой функции, но оно стандартно и
-# может быть использовано «как есть». Главное, что мы должны вынести для себя — это возможность использовать проверку
-# переменной request.node.rep_call.failed. Не забывайте добавлять объект request ко входящим параметрам вашей фикстуры.
-# import pytest
-# import uuid
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True) # Передаем в конструктор функцию pytest.hookimpl
 def pytest_runtest_makereport(item, call):# This function helps to detect that some test failed and pass this information to teardown:
@@ -51,8 +12,6 @@ def pytest_runtest_makereport(item, call):# This function helps to detect that s
     rep = outcome.get_result()
     setattr(item, "rep_" + rep.when, rep)
     return rep
-
-
 
 
 @pytest.fixture(autouse=True)
@@ -200,90 +159,3 @@ def test_in_my_pets(driver):
         assert len(set_data) == keys  # проверяем, что количество элементов в списке set_data равно кол-ву ключей
     except AssertionError:
         print("В списке повторяющиеся питомцы")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# class AllElementsHave(object):  функция не работает, м.б. когда-нибудь разберусь, но вряд ли.
-#   def __init__(self, locator, element, value):
-#     self.locator = locator
-#     self.element = element
-#     self.value = value
-#
-#   def __call__(self, driver):
-#     recall = driver.find_elements(*self.locator)
-#     have_element = []
-#     do_not_have_element = []
-#     have=0
-#     do_not_have=0
-#     for i in recall.get_attribute(self.element):
-#         if i == self.value():
-#             have_element = have_element.append(i)
-#             have += 1
-#         else:
-#             do_not_have_element = do_not_have_element.append(i)
-#             do_not_have += 1
-#         print("Найдено искомых элементов:", have, "Найдено пустых элементов:", do_not_have), have_element, do_not_have_element
-#     if have == 0:
-#         return False
-#     else:
-#         return True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# class TestPetFriends(driver):
-#     def setup(self):
-#         self.user = 'api@api'
-#         self.password = 'api@api'
-#
-#     def open(self):
-#         self.driver = webdriver.Chrome()
-#         self.get('https://petfriends.skillfactory.ru/')
-#
-#     def close(self):
-#         self.driver.quit()
-#
-#     def test_login_in_button(self):
-#         self.open()
-#         WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(
-#             (By.XPATH, '//button[@text="Зарегистрироваться]'))).click()  # ждём загрузки страницы до появления кнопки
