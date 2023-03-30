@@ -1,4 +1,4 @@
-''' заходишь на https://github.com/yandex/YandexDriver/releases выбираешь в 23.1.0-stable нужную версию 64/32 винды'''
+''' заходишь на https://github.com/yandex/YandexDriver/releases выбираешь нужную версию'''
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
