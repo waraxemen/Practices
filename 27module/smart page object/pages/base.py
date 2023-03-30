@@ -259,27 +259,40 @@ class WebPage(object):
 class AuthPage(WebPage):  # для авторизации с паролем
 
     def __init__(self, web_driver, url=''):
-        url = 'https://petfriends.skillfactory.ru/login'
+        url = 'https://b2c.passport.rt.ru/'
         super().__init__(web_driver, url)
 
-    username = WebElement(id='login')
+    tab_phone = WebElement(id='t-btn-tab-phone')
+    tab_mail = WebElement(id='t-btn-tab-mail')
+    tab_login = WebElement(id='t-btn-tab-login')
+    tab_ls = WebElement(id='t-btn-tab-ls')
+    first_field = WebElement(id='username')
+    password_field = WebElement(id='password')
+    tab_phone_is_active = WebElement(xpath="//div[@id='t-btn-tab-phone'][@class='rt-tab rt-tab--small rt-tab--active']")
+    tab_mail_is_active = WebElement(xpath= "//div[@id='t-btn-tab-mail'][@class='rt-tab rt-tab--small rt-tab--active']")
+    tab_login_is_active = WebElement(xpath= "//div[@id='t-btn-tab-login'][@class='rt-tab rt-tab--small rt-tab--active']")
+    tab_ls_is_active = WebElement(xpath= "//div[@id='t-btn-tab-ls'][@class='rt-tab rt-tab--small rt-tab--active']")
+    btn = WebElement(id="kc-login")
+    phone_action = WebElement(id="phone_action")
 
-    email = WebElement(id='email')
-
-    password = WebElement(id='pass')
-
-    btn = WebElement(class_name='btn.btn-success')
 
 
-class MainPage(WebPage):  # для авторизации с куки
-    def __init__(self, web_driver, url=''):
-        if not url:
-            url = os.getenv("MAIN_URL") or 'https://petfriends.skillfactory.ru/'
 
-        super().__init__(web_driver, url)
-        with open('../my_cookies.txt', 'rb') as cookiesfile:  # загружаем куки страницы
-            cookies = pickle.load(cookiesfile)
-            for cookie in cookies:
-                web_driver.add_cookie(cookie)  # добавляем куки в браузер
-            web_driver.refresh()  # закрываем браузер
+
+
+
+
+
+
+# class MainPage(WebPage):  # для авторизации с куки, в данной работе не будет использоваться
+#     def __init__(self, web_driver, url=''):
+#         if not url:
+#             url = os.getenv("MAIN_URL") or 'https://b2c.passport.rt.ru/'
+#
+#         super().__init__(web_driver, url)
+#         with open('../my_cookies.txt', 'rb') as cookiesfile:  # загружаем куки страницы
+#             cookies = pickle.load(cookiesfile)
+#             for cookie in cookies:
+#                 web_driver.add_cookie(cookie)  # добавляем куки в браузер
+#             web_driver.refresh()  # закрываем браузер
 

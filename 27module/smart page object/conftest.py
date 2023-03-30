@@ -11,27 +11,24 @@ from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
 
 
-# @pytest.fixture(scope = 'session')  # (autouse=True) for yandex driver
-# def driver():  # при использовании закомментить строку browser = webdriver.Chrome(executable_path= в def web_browser
-#     s = Service(r"C:\Users\Ann\PycharmProjects\PageObjects\tests\yandexdriver.exe")  # Путь к драйверу
-#     driver = webdriver.Chrome(service=s)  # Инициализируем драйвер
-#     chromeOptions = webdriver.ChromeOptions()  # Создаем объект options
-#     chromeOptions.binary_location = r"C:\Users\Администратор\AppData\Local\Yandex\YandexBrowser\Application\browser.exe"
-#     # driver.get('http://petfriends.skillfactory.ru/login')  # Переходим на страницу авторизации (pytest.driver)
-#     # driver.maximize_window()  # Развернем окно
-#     yield driver   # Возвращаем объект pytest.driver
-#     driver.quit()  # Закрываем браузер
-
-
+@pytest.fixture(scope = 'session')  # (autouse=True) for yandex driver (при использовании другого браузера - закоментить всю фикстуру)
+def driver():  # при использовании закомментить строку browser = webdriver.Chrome(executable_path= в def web_browser
+    s = Service(r"C:\Users\Администратор\AppData\Local\Yandex\YandexBrowser\Application\yandexdriver.exe")  # Путь к драйверу
+    driver = webdriver.Chrome(service=s)  # Инициализируем драйвер
+    chromeOptions = webdriver.ChromeOptions()  # Создаем объект options
+    chromeOptions.binary_location = r"C:\Users\Администратор\AppData\Local\Yandex\YandexBrowser\Application\browser.exe"
+    # driver.get('http://petfriends.skillfactory.ru/login')  # Переходим на страницу авторизации (pytest.driver)
+    # driver.maximize_window()  # Развернем окно
+    yield driver   # Возвращаем объект pytest.driver
+    driver.quit()  # Закрываем браузер
 
 
 @pytest.fixture
 def chrome_options(chrome_options):
     # chrome_options.binary_location = '/usr/bin/google-chrome-stable'
     # chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--no-sandbox')  # добавляет аргументы для браузера
     chrome_options.add_argument('--log-level=DEBUG')
-
     return chrome_options
 
 
@@ -47,12 +44,13 @@ def pytest_runtest_makereport(item, call):
 
 
 @pytest.fixture
-def web_browser(request):
-    # browser = webdriver.Firefox(executable_path=r"C:\Users\Ann\PycharmProjects\PageObjects\tests\geckodriver.exe")
-    browser = webdriver.Chrome(executable_path=r"C:\Users\Ann\PycharmProjects\PageObjects\tests\chromedriver.exe")
-# def web_browser(request, selenium):  # use this for yandex driver instead of 2 strings above
-#     browser = selenium
-    browser.set_window_size(1400, 1000)
+# def web_browser(request):
+    # browser = webdriver.Firefox(executable_path=r"C:\Users\Ann\PycharmProjects\PageObjects\tests\geckodriver.exe")   # for firefox driver
+    # browser = webdriver.Chrome(executable_path=r"C:\Users\Ann\PycharmProjects\PageObjects\tests\chromedriver.exe")   # for chrome driver
+def web_browser(request, selenium):  # use this for yandex driver instead of 2 strings above
+    browser = selenium   # use this for yandex driver
+    # browser.set_window_size(1080, 720)
+    browser.maximize_window()  # Развернем окно
 
     # Return browser instance to test case:
     yield browser
