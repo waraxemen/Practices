@@ -274,12 +274,14 @@ class AuthPage(WebPage):  # для авторизации с паролем
     tab_ls_is_active = WebElement(xpath= "//div[@id='t-btn-tab-ls'][@class='rt-tab rt-tab--small rt-tab--active']")
     btn = WebElement(id="kc-login")
     phone_action = WebElement(id="phone_action")
-
-
-
-
-
-
+    button_forgot_password = WebElement(id="forgot_password")
+    title = WebElement(xpath="//h1[@class='card-container__title']")
+    left_panel = WebElement(id="page-left")
+    slogan = WebElement(xpath="//p[@class='what-is__desc']")
+    button_register = WebElement(id="kc-register")
+    button_register_in = WebElement(xpath="//button[@name='register']")
+    input_name = WebElement(name="firstName")
+    input_last_name = WebElement(name="lastName")
 
 
 
