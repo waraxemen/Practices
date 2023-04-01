@@ -88,9 +88,20 @@ class WebElement(object):
         element = self.find()
         if element:
             element.click()
-            element.clear()
+            self.clear_all()  # заменил стандартный метод на свой
             element.send_keys(keys)
             time.sleep(wait)
+        else:
+            msg = 'Element with locator {0} not found'
+            raise AttributeError(msg.format(self._locator))
+    def clear_all(self, wait=0.3):
+        """ Clear the element. """
+        element = self.find()
+        if element:
+            element.click()
+            time.sleep(wait)
+            element.send_keys(Keys.CONTROL, 'a')
+            element.send_keys(Keys.DELETE)
         else:
             msg = 'Element with locator {0} not found'
             raise AttributeError(msg.format(self._locator))

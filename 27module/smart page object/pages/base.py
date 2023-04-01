@@ -282,10 +282,10 @@ class AuthPage(WebPage):  # для авторизации с паролем
     button_register_in = WebElement(xpath="//button[@name='register']")
     input_name = WebElement(name="firstName")
     input_last_name = WebElement(name="lastName")
-
-
-
-
+    region = WebElement(xpath="//div[@class='rt-input-container rt-select__input']//input[@class='rt-input__input rt-input__input--rounded rt-input__input--orange']")
+    input_mail_or_phone = WebElement(id="address")
+    password_confirm_field = WebElement(id="password-confirm")
+    city = WebElement(xpath="//div[13]")
 # class MainPage(WebPage):  # для авторизации с куки, в данной работе не будет использоваться
 #     def __init__(self, web_driver, url=''):
 #         if not url:
