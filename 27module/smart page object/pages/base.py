@@ -286,6 +286,23 @@ class AuthPage(WebPage):  # для авторизации с паролем
     input_mail_or_phone = WebElement(id="address")
     password_confirm_field = WebElement(id="password-confirm")
     city = WebElement(xpath="//div[13]")
+
+
+class RegPage(WebPage):  # для авторизации с паролем и переход на страницу регистрации
+
+    def __init__(self, web_driver, url=''):
+        url = 'https://b2c.passport.rt.ru/'
+        super().__init__(web_driver, url)
+        web_driver.get(url)
+        button_register = WebElement(id="kc-register")
+        WebDriverWait(web_driver, 3).until(EC.element_to_be_clickable((By.ID, "kc-register"))).click()
+        WebDriverWait(web_driver, 3).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='firstName']")))
+        # time.sleep(0.5)
+
+    input_name = WebElement(xpath="//input[@name='firstName']")
+    name_error = WebElement(xpath="//span[@class='rt-input-container__meta rt-input-container__meta--error']")
+    input_last_name = WebElement(name="lastName")
+
 # class MainPage(WebPage):  # для авторизации с куки, в данной работе не будет использоваться
 #     def __init__(self, web_driver, url=''):
 #         if not url:

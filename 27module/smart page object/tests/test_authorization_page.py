@@ -1,4 +1,4 @@
-from pages.base import AuthPage
+from pages.base import AuthPage, RegPage
 import pytest
 import pickle
 from selenium.webdriver.common.by import By
@@ -217,10 +217,14 @@ def test_button_register(web_browser):
 """Форма ввода имени - валидное имя"""
 @pytest.mark.parametrize('name', ['Си', 'Иван', 'Маша', 'Джон', 'Александра', 'Иван-Чай'])
 def test_input_name(web_browser, name):
-    page = AuthPage(web_browser)
-    page.button_register.click(0.3)  # кликаем на кнопку "Зарегистрироваться"
+    page = RegPage(web_browser)
+    # page.button_register.click(0.3)  # кликаем на кнопку "Зарегистрироваться"
     page.input_name.send_keys(name)
-
+    if not page.input_name.is_visible():
+        page.refresh()  # перезагрузка страницы при ошибке загрузки 
+    page.input_last_name.click(0.2)
+    # assert not page.name_error.find()  # проверяем, что не появилась сообщение об ошибке ввода имени
+    assert not page.name_error.is_visible()  # проверяем, что не появилась сообщение об ошибке ввода имени
 
 """__________________________________Бонусные тесты_____________________________________"""
 """Зарегистрироваться на странице авторизации"""
@@ -235,7 +239,7 @@ def test_registration(web_browser):
     page.city.click()
     page.password_field.send_keys(password)
     page.password_confirm_field.send_keys(password)
-    time.sleep(9)
+    time.sleep(1)
     page.button_register_in.click(1)  # 1 - click hold 1 second on login button
     assert not page.button_register_in  # проверяем, что нет кнопки "Зарегистрироваться"
 

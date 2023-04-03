@@ -78,7 +78,7 @@ def web_browser(request, selenium):  # use this for yandex driver instead of 2 s
 
         except:
             pass # just ignore any errors here
-    browser.quit()  # Закрываем браузер
+    # browser.quit()  # Закрываем браузер
 
 def get_test_case_docstring(item):
     """ This function gets doc string from test case and format it

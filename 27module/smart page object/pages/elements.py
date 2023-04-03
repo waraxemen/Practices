@@ -56,7 +56,11 @@ class WebElement(object):
 
     def is_visible(self):
         """ Check is the element visible or not. """
-        element = WebDriverWait(self._web_driver, timeout=0).until(EC.visibility_of_element_located(self._locator))
+        element = None
+        try:
+            element = WebDriverWait(self._web_driver, timeout=0).until(EC.visibility_of_element_located(self._locator))
+        except:
+            print(colored('Искомый элемент не найден!', 'red'))
         if element:
             return True
         return False
