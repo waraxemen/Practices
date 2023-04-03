@@ -215,16 +215,76 @@ def test_button_register(web_browser):
     assert page.button_register_in  # проверяем, что появилась кнопка "Зарегистрироваться" на странице регистрации
 
 """Форма ввода имени - валидное имя"""
-@pytest.mark.parametrize('name', ['Си', 'Иван', 'Маша', 'Джон', 'Александра', 'Иван-Чай'])
+@pytest.mark.parametrize('name', ['Си', 'Иван', 'Маша', 'Джон', 'Александра', 'Иван-Чай', 'Андвпвпвпвмвкмвкмвкпвкпвмвквв'])
 def test_input_name(web_browser, name):
     page = RegPage(web_browser)
     # page.button_register.click(0.3)  # кликаем на кнопку "Зарегистрироваться"
+    while not page.input_name.is_visible():
+        page.refresh()  # перезагрузка страницы при ошибке загрузки
     page.input_name.send_keys(name)
-    if not page.input_name.is_visible():
-        page.refresh()  # перезагрузка страницы при ошибке загрузки 
     page.input_last_name.click(0.2)
     # assert not page.name_error.find()  # проверяем, что не появилась сообщение об ошибке ввода имени
     assert not page.name_error.is_visible()  # проверяем, что не появилась сообщение об ошибке ввода имени
+
+
+"""Форма ввода имени - валидное имя из 2 символов и с символом "-" """
+@pytest.mark.parametrize('name', ['Ф-', '-А', '--', '-А-', '---', '-Иван-Чай-'])
+def test_input_name_(web_browser, name):
+    page = RegPage(web_browser)
+    while not page.input_name.is_visible():
+        page.refresh()  # перезагрузка страницы при ошибке загрузки
+    page.input_name.send_keys(name)
+    page.input_last_name.click(0.2)
+    try:
+        assert not page.name_error.is_visible()  # проверяем, что не появилось сообщение об ошибке ввода имени
+    except AssertionError:
+        print(f'При вводе {name} высветилась ошибка')
+
+
+"""Форма ввода имени невалидное имя"""
+@pytest.mark.parametrize('name', ['Ф', ' ', '123', 'Антон2', 'Андвпвпвпвмвкмвкмвкпвкпвмвкввп', 'Андвпвпвпвмвкмвкмвкпвкпвмвкввпа','Иван Антонович',
+                                  'Аванапрапривкеваикеиервкпвпиукпупаыпмкпкпвкпвамикпкпвмвкпвкпвапкпквпквпвмикеркпкпвпиукпупаыпмкпкпвкпвамикпкпвмвкпвкпвапкпквпквпвмикеркпкпвпиукпупаыпмкпкпвкпвамикпкпвмвкпвкпвапкпквпквпвмикеркпкпвпиукпупаыпмкпкпвкпвамикпкпвмвкпвкпвапкпквпквпвмикеркпкпвпппвп',
+                                  'Andry','','"&&&','???','@@@','№№№',';;;','%%%','"""',"'''",'...','^^^','###','!!!','☺☺☺','صسغذئآ','龍門大酒家','<IMG src="#">','原千五百秋瑞',
+                                  '<script>alert("Поле input уязвимо!")</script>','drop table keycloak.accounts','Bdfy Fynjyjdbx'])
+def test_input_invalid_name(web_browser, name):
+    page = RegPage(web_browser)
+    while not page.input_name.is_visible():
+        page.refresh()  # перезагрузка страницы при ошибке загрузки
+    page.input_name.send_keys(name)
+    page.input_last_name.click(0.2)
+    try:
+        assert page.name_error.is_visible()  # проверяем, что появилось сообщение об ошибке ввода имени
+    except AssertionError:
+        print(f'При вводе {name} не высветилась ошибка')
+
+
+"""Форма ввода фамилии - валидная фамилия"""
+@pytest.mark.parametrize('name', ['Си', 'Иван', 'Маша', 'Джон', 'Александра', 'Иван-Чай', 'Андвпвпвпвмвкмвкмвкпвкпвмвквв'])
+def test_input_last_name(web_browser, name):
+    page = RegPage(web_browser)
+    while not page.input_last_name.is_visible():
+        page.refresh()  # перезагрузка страницы при ошибке загрузки
+    page.input_last_name.send_keys(name)
+    page.input_name.click(0.2)
+    assert not page.name_error.is_visible()  # проверяем, что не появилось сообщение об ошибке ввода имени
+
+
+"""Форма ввода фамилии - не валидная фамилия"""
+@pytest.mark.parametrize('name', ['Ф', ' ', '123', 'Антон2', 'Андвпвпвпвмвкмвкмвкпвкпвмвкввп', 'Андвпвпвпвмвкмвкмвкпвкпвмвкввпа','Иван Антонович',
+                                  'Аванапрапривкеваикеиервкпвпиукпупаыпмкпкпвкпвамикпкпвмвкпвкпвапкпквпквпвмикеркпкпвпиукпупаыпмкпкпвкпвамикпкпвмвкпвкпвапкпквпквпвмикеркпкпвпиукпупаыпмкпкпвкпвамикпкпвмвкпвкпвапкпквпквпвмикеркпкпвпиукпупаыпмкпкпвкпвамикпкпвмвкпвкпвапкпквпквпвмикеркпкпвпппвп',
+                                  'Andry','','"&&&','???','@@@','№№№',';;;','%%%','"""',"'''",'...','^^^','###','!!!','☺☺☺','صسغذئآ','龍門大酒家','<IMG src="#">','原千五百秋瑞',
+                                  '<script>alert("Поле input уязвимо!")</script>','drop table keycloak.accounts','Bdfy Fynjyjdbx'])
+def test_input_invalid_last_name(web_browser, name):
+    page = RegPage(web_browser)
+    while not page.input_last_name.is_visible():
+        page.refresh()  # перезагрузка страницы при ошибке загрузки
+    page.input_last_name.send_keys(name)
+    page.input_name.click(0.2)
+    try:
+        assert page.name_error.is_visible()  # проверяем, что появилось сообщение об ошибке ввода имени
+    except AssertionError:
+        print(f'При вводе {name} не высветилась ошибка')
+
 
 """__________________________________Бонусные тесты_____________________________________"""
 """Зарегистрироваться на странице авторизации"""
@@ -244,8 +304,15 @@ def test_registration(web_browser):
     assert not page.button_register_in  # проверяем, что нет кнопки "Зарегистрироваться"
 
 
-
-
+"""Формы ввода имени и фамилии - валидные данные"""
+@pytest.mark.parametrize('name', ['Си', 'Иван', 'Маша', 'Джон', 'Александра', 'Иван-Чай', 'Андвпвпвпвмвкмвкмвкпвкпвмвквв'])
+@pytest.mark.parametrize('last_name', ['Си', 'Иван', 'Маша', 'Джон', 'Александра', 'Иван-Чай', 'Андвпвпвпвмвкмвкмвкпвкпвмвквв'])
+def test_input_last_name_and_name(web_browser, name, last_name):
+    page = RegPage(web_browser)
+    page.input_name.send_keys(name)
+    page.input_last_name.send_keys(last_name)
+    page.input_name.click(0.2)
+    assert not page.name_error.is_visible()  # проверяем, что не появилось сообщение об ошибке ввода имени
 
 
 

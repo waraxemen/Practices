@@ -295,6 +295,9 @@ class RegPage(WebPage):  # для авторизации с паролем и п
         super().__init__(web_driver, url)
         web_driver.get(url)
         button_register = WebElement(id="kc-register")
+        while not EC.visibility_of_element_located((By.ID, "kc-register")):
+            time.sleep(5)
+            page.refresh()
         WebDriverWait(web_driver, 3).until(EC.element_to_be_clickable((By.ID, "kc-register"))).click()
         WebDriverWait(web_driver, 3).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='firstName']")))
         # time.sleep(0.5)
