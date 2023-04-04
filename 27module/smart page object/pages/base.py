@@ -288,7 +288,7 @@ class AuthPage(WebPage):  # для авторизации с паролем
     city = WebElement(xpath="//div[13]")
 
 
-class RegPage(WebPage):  # для авторизации с паролем и переход на страницу регистрации
+class RegPage(WebPage):  # переход на страницу регистрации
 
     def __init__(self, web_driver, url=''):
         url = 'https://b2c.passport.rt.ru/'
