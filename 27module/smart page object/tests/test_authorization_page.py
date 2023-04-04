@@ -1,22 +1,20 @@
-from pages.base import AuthPage, RegPage
+from pages.base import AuthPage, RegPage, MainPage
 import pytest
 import pickle
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 import time
+import pickle
 
 phone = ('+7 242 424-24-22')
-login = "kopcarv2"
+login = "valid_login"
 email = 'test@mail.ru'
 ls = '123456789012'
 password = 'Test_pass1'
 wrong_password = 'Test_pass2'
 wrong_phone = '+71234567890'
 
-# tab_phone_is_active = selenium.find_element(By.XPATH,"//div[@id='t-btn-tab-phone'][@class='rt-tab rt-tab--small rt-tab--active']")
-# tab_mail_is_active = WebElement(xpath= "//div[@id='t-btn-tab-mail'][@class='rt-tab rt-tab--small rt-tab--active']")
-# tab_login_is_active = WebElement(xpath= "//div[@id='t-btn-tab-login'][@class='rt-tab rt-tab--small rt-tab--active']")
-# tab_ls_is_active = WebElement(xpath= "//div[@id='t-btn-tab-ls'][@class='rt-tab rt-tab--small rt-tab--active']")
 
 """При вводе номера телефона/почты/логина/лицевого счета - таб выбора телефонной аутентификации меняется автоматически. """
 def test_phone_auth_auto_changing(web_browser):
@@ -286,20 +284,21 @@ def test_input_invalid_last_name(web_browser, name):
         print(f'При вводе {name} не высветилась ошибка')
 
 
-"""__________________________________Бонусные тесты_____________________________________"""
+"""__________________________________________Бонусные тесты__________________________________________"""
+
 """Зарегистрироваться на странице авторизации"""
 def test_registration(web_browser):
-    page = AuthPage(web_browser)
+    page = AuthPage(web_browser)  # создаем объект страницы авторизации
     page.button_register.click(0.3)  # кликаем на кнопку "Зарегистрироваться"
     assert page.button_register_in  # проверяем, что появилась кнопка "Зарегистрироваться" на странице регистрации
-    page.input_name.send_keys('Превед')
-    page.input_last_name.send_keys('Сосед')
-    page.input_mail_or_phone.send_keys(email)
+    page.input_name.send_keys('Превед')  # вводим имя
+    page.input_last_name.send_keys('Медвед')  # вводим фамилию
+    page.input_mail_or_phone.send_keys(email)  # вводим email
     page.region.click()  #send_keys("Волгоградская обл")
-    page.city.click()
-    page.password_field.send_keys(password)
-    page.password_confirm_field.send_keys(password)
-    time.sleep(1)
+    page.city.click()  # Подтверждение города
+    page.password_field.send_keys(password)  # вводим пароль
+    page.password_confirm_field.send_keys(password)  # вводим пароль повторно
+    time.sleep(1)  # для визуализации и обхода возможной засветки автоматизации
     page.button_register_in.click(1)  # 1 - click hold 1 second on login button
     assert not page.button_register_in  # проверяем, что нет кнопки "Зарегистрироваться"
 
@@ -308,37 +307,67 @@ def test_registration(web_browser):
 @pytest.mark.parametrize('name', ['Си', 'Иван', 'Маша', 'Джон', 'Александра', 'Иван-Чай', 'Андвпвпвпвмвкмвкмвкпвкпвмвквв'])
 @pytest.mark.parametrize('last_name', ['Си', 'Иван', 'Маша', 'Джон', 'Александра', 'Иван-Чай', 'Андвпвпвпвмвкмвкмвкпвкпвмвквв'])
 def test_input_last_name_and_name(web_browser, name, last_name):
-    page = RegPage(web_browser)
-    page.input_name.send_keys(name)
-    page.input_last_name.send_keys(last_name)
-    page.input_name.click(0.2)
+    page = RegPage(web_browser)  # создаем объект страницы регистрации
+    page.input_name.send_keys(name)  # вводим имя
+    page.input_last_name.send_keys(last_name)  # вводим фамилию
+    page.input_name.click(0.2)  # кликаем на поле имени
     assert not page.name_error.is_visible()  # проверяем, что не появилось сообщение об ошибке ввода имени
 
 
+"""Использование значений из файла. Вводим значения в поля имени и фамилии"""
+def test_input_file_names(web_browser):
+    page = RegPage(web_browser)
+    with open('names.txt',encoding = 'utf-8', mode = 'r') as names:
+        lines = names.readlines()
+        for name in lines:
+            # print(name.strip())
+            try:
+                page.input_last_name.send_keys(name)
+                page.input_name.send_keys(name)
+                page.input_last_name.click(0.2)
+                assert not page.only_name_error.is_visible()
+            except AssertionError:
+                print(f'При вводе {name} высветилась ошибка!')
+    page.quit()
 
-# def test_authorisation(web_browser):  # запускается первым для получения печеньки
-#     page = AuthPage(web_browser)
-#     page.email.send_keys('api@api')
-#     page.password.send_keys("api@api")
-#     page.btn.click(1)  # 1 - click hold 1 second on login button
-#
-#     assert page.get_current_url() == 'https://petfriends.skillfactory.ru/all_pets'
-#
-#     with open('../my_cookies.txt', 'wb') as cookies:  # создание файла с cookies
-#         pickle.dump(web_browser.get_cookies(), cookies)  # сохранение cookies в файл
-#     page.quit()
-#
-#
-# def test_petfriends(web_browser):
-#     """ Authorize to Petfriends via cookies and create a screenshot when loginpage is successfull. """
-#
-#     page = MainPage(web_browser)
-#     # Scroll down till the end using actionchains and click on the last image
-#     page.scroll_down()
-#     # Make the screenshot of browser window:
-#     page._web_driver.save_screenshot('petfriends.png')
-#
-#
+
+"""Получаем печеньку"""
+def test_authorisation(web_browser):  # авторизация
+    page = AuthPage(web_browser)  # для удобства создаём указатель на функцию авторизации с паролем
+    page.tab_login.click(0.3)  # кликаем на вкладку "Логин"
+    page.first_field.send_keys(login)  # вводим логин
+    page.password_field.send_keys(password)  # вводим пароль
+    page.btn.click(1)  # жмём кнопку "Войти"
+    try:
+        assert page.phone_action.find()  # проверяем, что появилась настройка "Телефон" в ЛК
+    except AssertionError:
+        print('Авторизация не произошла, проверьте правильность ввода номера телефона и пароля')
+
+    with open('../my_cookies.txt', 'wb') as cookies:  # создание файла с cookies
+        pickle.dump(web_browser.get_cookies(), cookies)  # сохранение cookies в файл
+    page.quit()
+
+"""Кормим браузер печенькой и фоткаемся с ним на память"""
+def test_petfriends(web_browser):
+    page = MainPage(web_browser)
+    WebDriverWait(web_browser, 9).until((EC.visibility_of_element_located((By.ID, "phone_action"))))
+    page.scroll_down()
+    page._web_driver.save_screenshot('Main.png')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # def test_all_images_completely_loaded(web_browser):
 #     """This is advanced test which also checks that all images completely loaded."""
 #     page = MainPage(web_browser)

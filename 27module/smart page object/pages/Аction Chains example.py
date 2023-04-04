@@ -2,11 +2,11 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from pages.base import MainPage
 
-"""Тест не рабочий, чисто в информативных целях(в PetFriends нет меню и подменю)"""
+"""Тест не рабочий, чисто в информативных целях"""
 def test_action_chains(web_browser):
     MainPage(web_browser)
     menu = web_browser.find_elements(By.CSS_SELECTOR, "img.card-img-top")
-    hidden_submenu = web_browser.find_element_by_css_selector(".nav #submenu1")  # подменю, но в питомцах его нет
+    hidden_submenu = web_browser.find_element_by_css_selector(".nav #submenu1")  # подменю, но на сайте негде такое использовать.
     ActionChains(web_browser).move_to_element(menu).click(hidden_submenu).perform()
     # или эта же команда разбитая по частям
     # actions = ActionChains(web_browser)  # создаем объект ActionChains

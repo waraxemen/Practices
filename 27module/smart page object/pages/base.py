@@ -296,7 +296,7 @@ class RegPage(WebPage):  # для авторизации с паролем и п
         web_driver.get(url)
         button_register = WebElement(id="kc-register")
         while not EC.visibility_of_element_located((By.ID, "kc-register")):
-            time.sleep(5)
+            time.sleep(7)
             page.refresh()
         WebDriverWait(web_driver, 3).until(EC.element_to_be_clickable((By.ID, "kc-register"))).click()
         WebDriverWait(web_driver, 3).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='firstName']")))
@@ -304,17 +304,19 @@ class RegPage(WebPage):  # для авторизации с паролем и п
 
     input_name = WebElement(xpath="//input[@name='firstName']")
     name_error = WebElement(xpath="//span[@class='rt-input-container__meta rt-input-container__meta--error']")
+    only_name_error = WebElement(xpath="//span[contains(text(),'30')]")
     input_last_name = WebElement(name="lastName")
 
-# class MainPage(WebPage):  # для авторизации с куки, в данной работе не будет использоваться
-#     def __init__(self, web_driver, url=''):
-#         if not url:
-#             url = os.getenv("MAIN_URL") or 'https://b2c.passport.rt.ru/'
-#
-#         super().__init__(web_driver, url)
-#         with open('../my_cookies.txt', 'rb') as cookiesfile:  # загружаем куки страницы
-#             cookies = pickle.load(cookiesfile)
-#             for cookie in cookies:
-#                 web_driver.add_cookie(cookie)  # добавляем куки в браузер
-#             web_driver.refresh()  # закрываем браузер
+class MainPage(WebPage):  # для авторизации с куки
+    def __init__(self, web_driver, url=''):
+        if not url:
+            url = os.getenv("MAIN_URL") or 'https://b2c.passport.rt.ru/'
 
+        super().__init__(web_driver, url)
+        with open('../my_cookies.txt', 'rb') as cookiesfile:  # загружаем куки страницы
+            cookies = pickle.load(cookiesfile)
+            for cookie in cookies:
+                web_driver.add_cookie(cookie)  # добавляем куки в браузер
+            web_driver.refresh()  # закрываем браузер
+
+    phone_action = WebElement(id="phone_action")
